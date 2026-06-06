@@ -1,0 +1,56 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int R = sc.nextInt();
+        int C = sc.nextInt();
+
+        int[][] grid = new int[R][C];
+        long[][] dp = new long[R][C];
+
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                grid[i][j] = sc.nextInt();
+                dp[i][0] = grid[i][0];
+            }
+        }
+
+        for (int j = 1; j < C; j++) {
+
+            long max = Long.MIN_VALUE;
+            long secondMax = Long.MIN_VALUE;
+            int maxRow = -1;
+
+            // Find max and second max in previous column
+            for (int i = 0; i < R; i++) {
+                if (dp[i][j - 1] > max) {
+                    secondMax = max;
+                    max = dp[i][j - 1];
+                    maxRow = i;
+                } else if (dp[i][j - 1] > secondMax) {
+                    secondMax = dp[i][j - 1];
+                }
+            }
+
+           
+            for (int i = 0; i < R; i++) {
+                if (i == maxRow) {
+                    dp[i][j] = grid[i][j] + secondMax;
+                } else {
+                    dp[i][j] = grid[i][j] + max;
+                }
+            }
+        }
+
+        long ans = Long.MIN_VALUE;
+
+        for (int i = 0; i < R; i++) {
+            ans = Math.max(ans, dp[i][C - 1]);
+        }
+
+        System.out.println(ans);
+    }
+}
